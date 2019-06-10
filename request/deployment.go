@@ -49,22 +49,39 @@ func init() {
 	}
 }
 
-// TODO Add QueryGPU function
-
-// QueryGPU queries number of GPU
+/*
+QueryGPU queries number of GPU
+Parameters:
+	namespace
+	deployment
+*/
 func QueryGPU(namespace string, deployment string) {
+	deploymentsClient := clientset.AppsV1().Deployments(namespace)
 
+	fmt.Println("Querying deployment...")
+
+	retryErr := retry.RetryOnConflict(retry.DefaultRetry, func() error {
+		result, getErr := deploymentsClient.Get(deployment, metav1.GetOptions{})
+		if getErr != nil {
+			panic(fmt.Errorf("Failed to get Deployment %v ", getErr))
+		}
+		numGpu := result.Spec.Template.Spec.Containers[0].Resources.Requests["nvidia.com/gpu"]
+		fmt.Printf("Current Number of GPU is %v \n", numGpu.Value())
+		return getErr
+	})
+	if retryErr != nil {
+		panic(fmt.Errorf("Query failed: %v", retryErr))
+	}
 }
 
 /*
 Update number of GPU in the deployment
-parameters:
+Parameters:
 	namespace
 	deployment - deployment name
 	diff - difference of GPU number. Positive of negative integer
 */
 func Update(namespace string, deployment string, diff int64) {
-
 	deploymentsClient := clientset.AppsV1().Deployments(namespace)
 
 	fmt.Println("Updating deployment...")

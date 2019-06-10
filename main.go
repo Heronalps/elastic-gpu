@@ -9,9 +9,9 @@ import (
 )
 
 func main() {
-	request.Request()
-	// request.Update("racelab", "image-clf-train", 1)
-
+	// request.Request()
+	// request.Update("racelab", "image-clf-train", -1)
+	request.QueryGPU("racelab", "image-clf-train")
 }
 
 func query() {

@@ -23,6 +23,7 @@ import (
 	// _ "k8s.io/client-go/plugin/pkg/client/auth/openstack"
 )
 
+// Request kubernetes cluster
 func Request() {
 	var kubeconfig *string
 	if home := homedir.HomeDir(); home != "" {

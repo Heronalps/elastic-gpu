@@ -23,6 +23,13 @@ import (
 	// _ "k8s.io/client-go/plugin/pkg/client/auth/openstack"
 )
 
+/*
+Update number of GPU in the deployment
+parameters:
+	namespace
+	deployment - deployment name
+	diff - difference of GPU number. Positive of negative integer
+*/
 func Update(namespace string, deployment string, diff int64) {
 	var kubeconfig *string
 	if home := homedir.HomeDir(); home != "" {
@@ -44,9 +51,6 @@ func Update(namespace string, deployment string, diff int64) {
 	if err != nil {
 		panic(err.Error())
 	}
-
-	// namespace := "racelab"
-	// deployment := "image-clf-train"
 
 	deploymentsClient := clientset.AppsV1().Deployments(namespace)
 

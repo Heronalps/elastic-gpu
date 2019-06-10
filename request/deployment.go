@@ -23,14 +23,10 @@ import (
 	// _ "k8s.io/client-go/plugin/pkg/client/auth/openstack"
 )
 
-/*
-Update number of GPU in the deployment
-parameters:
-	namespace
-	deployment - deployment name
-	diff - difference of GPU number. Positive of negative integer
-*/
-func Update(namespace string, deployment string, diff int64) {
+var clientset *kubernetes.Clientset
+var err error
+
+func init() {
 	var kubeconfig *string
 	if home := homedir.HomeDir(); home != "" {
 		kubeconfig = flag.String("kubeconfig", filepath.Join(home, ".kube", "config"), "(optional) absolute path to the kubeconfig file")
@@ -47,10 +43,27 @@ func Update(namespace string, deployment string, diff int64) {
 	}
 
 	// create the clientset
-	clientset, err := kubernetes.NewForConfig(config)
+	clientset, err = kubernetes.NewForConfig(config)
 	if err != nil {
 		panic(err.Error())
 	}
+}
+
+// TODO Add QueryGPU function
+
+// QueryGPU queries number of GPU
+func QueryGPU(namespace string, deployment string) {
+
+}
+
+/*
+Update number of GPU in the deployment
+parameters:
+	namespace
+	deployment - deployment name
+	diff - difference of GPU number. Positive of negative integer
+*/
+func Update(namespace string, deployment string, diff int64) {
 
 	deploymentsClient := clientset.AppsV1().Deployments(namespace)
 

@@ -50,11 +50,12 @@ func Query(namespace string, queryStr string) (value float64, err error) {
 						return 0, errors.New("gpu exceptions")
 					}
 				}
+
 				if string(elem.Metric["namespace_name"]) == namespace {
 					return float64(elem.Value), nil
 				}
 			}
 		}
 	}
-	return 0, errors.New("Invalid query")
+	return 0, errors.New("Invalid query: Query Range is too short")
 }

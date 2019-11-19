@@ -39,12 +39,12 @@ func main() {
 			upperBoundCount++
 
 			// When GPU utilization is less than lower bound, dismiss one GPU
-			// Keep on GPU at least
+			// Keep one GPU at least
 		} else if gpuUtil < lowerBound && gpuNum > startGPU {
 			lowerBoundCount++
 
 		}
-		// 30 seconds being above upper bound leads to scaling up
+		// 5 * 6 = 30 seconds being above upper bound leads to scaling up
 		if upperBoundCount >= 6 {
 			fmt.Printf("Adding additional GPU... \n")
 			request.Update("racelab", "image-clf-train", 1)
@@ -53,7 +53,7 @@ func main() {
 			fmt.Println("Waiting for deployment to take effect...")
 			time.Sleep(60 * time.Second)
 		}
-		// 3 minute being above lower bound leads to scaling down
+		// 5 secs * 36 = 3 minute being above lower bound leads to scaling down
 		if lowerBoundCount >= 36 {
 			fmt.Printf("Remove extra GPU... \n")
 			request.Update("racelab", "image-clf-train", -1)
